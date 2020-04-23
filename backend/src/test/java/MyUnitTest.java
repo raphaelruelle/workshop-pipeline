@@ -1,7 +1,7 @@
 import com.workshop.demo.WorkshopDemo;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 
 public class MyUnitTest {
