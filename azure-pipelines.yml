@@ -34,7 +34,7 @@ stages :
         displayName: Build Backend Application
         condition: ne('${{ parameters.RUN_BUILDING_APPLICATION }}', 'frontend')
         pool:
-          vmImage: '@(AGENT_IMAGE)'
+          vmImage: '$(AGENT_IMAGE)'
         steps:
           - task: Maven@3
             inputs:
@@ -52,7 +52,7 @@ stages :
         displayName: Build Frontend Application
         condition: ne('${{ parameters.RUN_BUILDING_APPLICATION }}', 'backend')
         pool:
-          vmImage: '@(AGENT_IMAGE)'
+          vmImage: '$(AGENT_IMAGE)'
         steps:
           - task: NodeTool@0 
           - script: npm install -d --prefix ./frontend
