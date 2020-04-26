@@ -35,18 +35,30 @@ stages :
         condition: ne('${{ parameters.RUN_BUILDING_APPLICATION }}', 'frontend')
         pool:
           vmImage: '$(AGENT_IMAGE)'
+        variables:
+          MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
+          MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
         steps:
-          - task: Maven@3
+          - task: Cache@1
             inputs:
-              mavenPomFile: './backend/pom.xml'
-              javaHomeOption: 'JDKVersion'
-              jdkVersionOption: '1.8'
-              jdkArchitectureOption: 'x64'
-              publishJUnitResults: true
-              testResultsFiles: '**/surefire-reports/TEST-*.xml'
-              goals: 'clean package'
-              codeCoverageToolOption: JaCoCo
-              codeCoverageSourceDirectories: +:com.workshop.*
+              key: 'maven | "$(Agent.OS)" | **/pom.xml'
+              restoreKeys: |
+                maven | "$(Agent.OS)"
+                maven
+              path: $(MAVEN_CACHE_FOLDER)
+            displayName: Cache Maven local repo
+
+          - task: Maven@3
+              inputs:
+                mavenPomFile: './backend/pom.xml'
+                javaHomeOption: 'JDKVersion'
+                jdkVersionOption: '1.8'
+                jdkArchitectureOption: 'x64'
+                publishJUnitResults: true
+                testResultsFiles: '**/surefire-reports/TEST-*.xml'
+                goals: 'clean package $(MAVEN_OPTS)'
+                codeCoverageToolOption: JaCoCo
+                codeCoverageSourceDirectories: +:com.workshop.*
       
       - job: Frontend
         displayName: Build Frontend Application
