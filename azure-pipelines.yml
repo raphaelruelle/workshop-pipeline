@@ -49,16 +49,16 @@ stages :
             displayName: Cache Maven local repo
 
           - task: Maven@3
-              inputs:
-                mavenPomFile: './backend/pom.xml'
-                javaHomeOption: 'JDKVersion'
-                jdkVersionOption: '1.8'
-                jdkArchitectureOption: 'x64'
-                publishJUnitResults: true
-                testResultsFiles: '**/surefire-reports/TEST-*.xml'
-                goals: 'clean package $(MAVEN_OPTS)'
-                codeCoverageToolOption: JaCoCo
-                codeCoverageSourceDirectories: +:com.workshop.*
+            inputs:
+              mavenPomFile: './backend/pom.xml'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.8'
+              jdkArchitectureOption: 'x64'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              goals: 'clean package $(MAVEN_OPTS)'
+              codeCoverageToolOption: JaCoCo
+              codeCoverageSourceDirectories: +:com.workshop.*
       
       - job: Frontend
         displayName: Build Frontend Application
