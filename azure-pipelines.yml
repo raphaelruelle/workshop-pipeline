@@ -6,6 +6,12 @@
 
 name: 'Build_$(SourceBranchName)'
 
+variables:
+  - name: 'System.debug'
+    value: 'true'
+  - name: 'AGENT_IMAGE'
+    value: 'ubuntu-latest'
+
 parameters:
   - name: RUN_BUILDING_APPLICATION
     displayName: Run Building Backend / Frontend Application
@@ -15,16 +21,11 @@ parameters:
     - "all"
     - "backend"
     - "frontend"
-
-variables:
-  - name: 'System.debug'
-    value: 'true'
-  - name: 'AGENT_IMAGE'
-    value: 'ubuntu-latest'
+       
 
 trigger:
   - master
-
+  
 stages :
   - stage: Build
     displayName: Build Application
@@ -33,7 +34,7 @@ stages :
         displayName: Build Backend Application
         condition: ne('${{ parameters.RUN_BUILDING_APPLICATION }}', 'frontend')
         pool:
-          vmImage: '$(AGENT_IMAGE)'
+          vmImage: '@(AGENT_IMAGE)'
         steps:
           - task: Maven@3
             inputs:
@@ -46,12 +47,12 @@ stages :
               goals: 'clean package'
               codeCoverageToolOption: JaCoCo
               codeCoverageSourceDirectories: +:com.workshop.*
-
+      
       - job: Frontend
         displayName: Build Frontend Application
         condition: ne('${{ parameters.RUN_BUILDING_APPLICATION }}', 'backend')
         pool:
-          vmImage: '$(AGENT_IMAGE)'
+          vmImage: '@(AGENT_IMAGE)'
         steps:
           - task: NodeTool@0 
           - script: npm install -d --prefix ./frontend
